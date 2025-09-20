@@ -1,0 +1,68 @@
+---
+title: "2025-09-16"
+format:
+  html: default
+  pdf: default
+params:
+  course: "mc451"
+  word_min: 250
+  word_max: 300
+ 
+  p3: 'Pick one communication theory mentioned in this chapter (e.g., Cultivation Theory, Social Comparison Theory, Feminist Theory). Briefly describe how this theory interprets a real-world communication problem (e.g., violence in media, body image, online harassment). Then reflect on how your understanding of the issue changes when seen through that theoretical lens. What does the theory help you notice that you might not have otherwise?'
+---
+
+## Choose **one** prompt to answer
+
+> **Prompt A:** `r params$p1`
+
+> **Prompt B:** `r params$p2`
+
+> **Prompt C:** `r params$p3`
+
+---
+
+## Response
+
+<!-- RESPONSE-START -->
+Cultivation Theory (from Gerbner) argues that people who are heavy viewers of television will gradually come to see the world in ways that reflect the frequent themes and messages on TV, because those messages are part of their long-term media "diet." For example, with violence in media: Tv dramas, news, and crime shows often over represent violent events and portray situations more dangerous than they really are. Cultivation Theory predicts that people who consume more of that kind of content will have higher fear of crime, overestimate risk of being victimized, or believe others are more violent or less trustworthy. So, before using the Cultivation Theory, I might see violence in the media as just a question of whether or not certain shows cause people to act violently or if they are "too graphic," or maybe it is just purely artistic or storytelling issues. When looking at Cultivation theory, it makes me pay attention to cumulative exposure, distortion of reality, and effects of beliefs and attitudes more than behavior. First, with cumulative exposure we don't want to look at just isolated incidents. Instead we should ask the question, "what does watching such films again and again do to someone's sense of safety in the world?" Next is the distortion of reality. By this, I mean what the media disproportionately shows vs what actually happens. For example, news broadcasts may show a lot of violent crimes, even if actual crime rates are lower or falling. Cultivation Theory helps notice that discrepancy. Finally, the effects on beliefs and attitude more than behavior is less about someone going out and committing violence and more about how they view/understand risk, others, and social norms. So, using Cultivation Theory helps me see violence in the media not just as entertainment, but as something that subtly shapes worldviews; especially of frequent viewers. It draws my attention to the perception gaps, such as what people this is true vs what is true, fear as a public health or social issue, and also to long-term effects rather than just short-term responses. 
+<!-- RESPONSE-END -->
+
+---
+
+## Word Count & Range Check
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+get_response_text <- function() {
+  f <- knitr::current_input()
+  if (is.null(f) || !file.exists(f)) return("")
+  x <- readLines(f, warn = FALSE)
+  # Find the lines that EXACTLY match the start/end markers
+  s <- grep("^<!-- RESPONSE-START -->$", x)
+  e <- grep("^<!-- RESPONSE-END -->$", x)
+  if (length(s) != 1 || length(e) != 1 || e <= s) return("")
+  paste(x[(s + 1L):(e - 1L)], collapse = "\n")
+}
+count_words <- function(txt) {
+  # Remove code blocks and inline code before counting
+  txt <- gsub("```[\\s\\S]*?```", " ", txt, perl = TRUE)
+  txt <- gsub("`[^`]*`", " ", txt, perl = TRUE)
+  # Keep letters, numbers, spaces, hyphens, and apostrophes
+  txt <- gsub("[^\\p{L}\\p{N}\\s'-]", " ", txt, perl = TRUE)
+  # Split by whitespace and count non-empty words
+  words <- unlist(strsplit(txt, "\\s+", perl = TRUE))
+  words <- words[nzchar(words)]
+  length(words)
+}
+txt <- get_response_text()
+n <- count_words(txt)
+minw <- as.integer(params$word_min)
+maxw <- as.integer(params$word_max)
+in_range <- n >= minw && n <= maxw
+cat(sprintf("**Word count:** %d  \n", n))
+cat(sprintf("**Required range (%s):** %d–%d words  \n",
+            toupper(params$course), minw, maxw))
+cat(if (in_range) "**Status:** ✅ In range\n" else "**Status:** ❌ Out of range\n")
+```
