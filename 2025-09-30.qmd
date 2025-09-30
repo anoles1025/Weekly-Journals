@@ -1,0 +1,66 @@
+---
+title: "2025-09-30"
+format:
+  html: default
+  pdf: default
+params:
+  course: "mc451"
+  word_min: 250
+  word_max: 300
+  
+  p3: 'Much of today’s research relies on digital data—tweets, posts, videos, and online surveys. This chapter explains how population bias, self-selection bias, and data availability bias can distort digital research. Choose one of these forms of bias and describe how it might affect a study of online news consumption or streaming habits. What could a researcher do to acknowledge or reduce that bias?'
+---
+
+## Choose **one** prompt to answer
+
+
+
+> **Prompt C:** `r params$p3`
+
+---
+
+## Response
+
+<!-- RESPONSE-START -->
+One form of bias that stands out to me is self-selection bias, and it can have a big impact on studies of online news consumption. For example, imagine a sirvey that asks people to share what kinds of news websites they visit. The people who choose to respond are likely the ones who already care about news or who feel confident in their media habits. Whereas those who consume less news-- or who might feel guilty about spending more time on entertainment sites than news sites-- are less likely to participate. As a result, the sample skews toward heavier and more conscientious news consumers, creating impression that the public is more engaged with the news than it really is. This is especially tricky in digital spaces, where participation is often voluntary. A similar issue shows up in streaming habits. If a researcher asks people to self-report what they watch, those who see their viewing choices as "smarter" or "more socially acceptable" may be quicker to respond. This kind of selective participation distorts the findings, painting a picture that doesn't represent the broader population. To address this bias, researchers can combine self-reported data with behavioral data, such as anonymous logs from streaming platforms or analytics from news sights. They can also acknowledge the limitations up front, noting that the data reflects the choices of those who opted in. Most importantly, they can design studies that seek out a wider variety of participants-- perhaps by offering incentives or recruiting outside of the usual online channels. By being transparent about self-selection bias and trying to balance it, researchers can provide a more realistic picture of how people actually consume digital media. 
+<!-- RESPONSE-END -->
+
+---
+
+## Word Count & Range Check
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+get_response_text <- function() {
+  f <- knitr::current_input()
+  if (is.null(f) || !file.exists(f)) return("")
+  x <- readLines(f, warn = FALSE)
+  # Find the lines that EXACTLY match the start/end markers
+  s <- grep("^<!-- RESPONSE-START -->$", x)
+  e <- grep("^<!-- RESPONSE-END -->$", x)
+  if (length(s) != 1 || length(e) != 1 || e <= s) return("")
+  paste(x[(s + 1L):(e - 1L)], collapse = "\n")
+}
+count_words <- function(txt) {
+  # Remove code blocks and inline code before counting
+  txt <- gsub("```[\\s\\S]*?```", " ", txt, perl = TRUE)
+  txt <- gsub("`[^`]*`", " ", txt, perl = TRUE)
+  # Keep letters, numbers, spaces, hyphens, and apostrophes
+  txt <- gsub("[^\\p{L}\\p{N}\\s'-]", " ", txt, perl = TRUE)
+  # Split by whitespace and count non-empty words
+  words <- unlist(strsplit(txt, "\\s+", perl = TRUE))
+  words <- words[nzchar(words)]
+  length(words)
+}
+txt <- get_response_text()
+n <- count_words(txt)
+minw <- as.integer(params$word_min)
+maxw <- as.integer(params$word_max)
+in_range <- n >= minw && n <= maxw
+cat(sprintf("**Word count:** %d  \n", n))
+cat(sprintf("**Required range (%s):** %d–%d words  \n",
+            toupper(params$course), minw, maxw))
+cat(if (in_range) "**Status:** ✅ In range\n" else "**Status:** ❌ Out of range\n")
+```
