@@ -1,0 +1,66 @@
+---
+title: "2025-09-22"
+format:
+  html: default
+  pdf: default
+params:
+  course: "mc451"
+  word_min: 250
+  word_max: 300
+  p1: 'Think of a broad media-related topic you’ve been curious about—something like influencer culture, algorithmic feeds, or news bias. Now, imagine you’re preparing to research this topic. Would you start with a research question or a hypothesis? Why? Reflect on how much you already know (or don’t know) about the topic, and how that affects whether exploration or prediction is the better fit.'
+ 
+---
+
+## Choose **one** prompt to answer
+
+> **Prompt A:** `r params$p1`
+
+
+
+---
+
+## Response
+
+<!-- RESPONSE-START -->
+If I were going to research the algorithim feeds on social media, my first step would be developing a research question before even attempting a hypothesis. According to the chapter we read this week, there are specific differences between a research question and a hypothesis. The main one is that it relies on how much prior knowledge exists and whether the researcher wants to use "exploration" or "prediction." I have some knowledge of how algorithmic feeds work, such as the engagement-based ranking and filter bubbles, but I don't have any detailed and "systematic evidence" on the broader consequences, such as impacts on the political environments, mental health, or diversity.Since I lack that depth, the study is more exploratory. A research question, such as "How does use of algorithmic feeds affect exposure to diverse political viewpoints among users on social media?" works perfectly. It allows me to explore, explain, and understand the issue without jumping to conclusions too early.This is in the textbook when they discuss that research questions are most valuable when existing studies are limited, inconsistent, or when the subject is somewhat new. Only once enough groundwork has been laid, through a literature review or pilot studies, and I begin seeing patterns, it would make sense for me to try to formulate a hypothesis. Developing a hypothesis depends on if i have enough research to suggest a specific event-- for instance, that algorithmic feeds limit political diversity-- but I don't yet have the basis to make that prediction. Therefor since I am starting in the exploration stage instead of prediction, it makes sense to use a research question since it is a stronger starting point. 
+<!-- RESPONSE-END -->
+
+---
+
+## Word Count & Range Check
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+get_response_text <- function() {
+  f <- knitr::current_input()
+  if (is.null(f) || !file.exists(f)) return("")
+  x <- readLines(f, warn = FALSE)
+  # Find the lines that EXACTLY match the start/end markers
+  s <- grep("^<!-- RESPONSE-START -->$", x)
+  e <- grep("^<!-- RESPONSE-END -->$", x)
+  if (length(s) != 1 || length(e) != 1 || e <= s) return("")
+  paste(x[(s + 1L):(e - 1L)], collapse = "\n")
+}
+count_words <- function(txt) {
+  # Remove code blocks and inline code before counting
+  txt <- gsub("```[\\s\\S]*?```", " ", txt, perl = TRUE)
+  txt <- gsub("`[^`]*`", " ", txt, perl = TRUE)
+  # Keep letters, numbers, spaces, hyphens, and apostrophes
+  txt <- gsub("[^\\p{L}\\p{N}\\s'-]", " ", txt, perl = TRUE)
+  # Split by whitespace and count non-empty words
+  words <- unlist(strsplit(txt, "\\s+", perl = TRUE))
+  words <- words[nzchar(words)]
+  length(words)
+}
+txt <- get_response_text()
+n <- count_words(txt)
+minw <- as.integer(params$word_min)
+maxw <- as.integer(params$word_max)
+in_range <- n >= minw && n <= maxw
+cat(sprintf("**Word count:** %d  \n", n))
+cat(sprintf("**Required range (%s):** %d–%d words  \n",
+            toupper(params$course), minw, maxw))
+cat(if (in_range) "**Status:** ✅ In range\n" else "**Status:** ❌ Out of range\n")
+```
