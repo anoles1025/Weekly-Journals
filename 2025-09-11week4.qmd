@@ -1,0 +1,69 @@
+---
+title: "2025-09-11"
+format:
+  html: default
+  pdf: default
+params:
+  course: "mc451"
+  word_min: 250
+  word_max: 300
+  p1: 'Choose either the Nazi medical experiments or the Tuskegee syphilis study and reflect on what that case teaches us about the need for ethical safeguards in research. Why do you think these events had such a lasting impact on how research is conducted today? How might studying these cases shape your behavior as a future researcher?'
+  p2: 'Imagine you are researching a public social media platform like X (formerly Twitter), Reddit, or TikTok. Would you consider the content you’re analyzing to be public or private? Would you need to obtain informed consent? Why or why not? Reflect on the ethical gray areas that emerge in digital research and how you would navigate them.'
+  p3: 'Think ahead to a study you might conduct as part of this course. What would it look like to fully honor the principles of respect for persons, beneficence, and justice in your research? Identify at least one concrete action you would take during your study’s design or data collection to uphold each of these three ethical principles.'
+---
+
+## Choose **one** prompt to answer
+
+> **Prompt A:** `r params$p1`
+
+> **Prompt B:** `r params$p2`
+
+> **Prompt C:** `r params$p3`
+
+------------------------------------------------------------------------
+
+## Response
+
+<!-- RESPONSE-START -->
+
+\*If I was going to research a social media site like X, Reddit, or TikTok, I think that all the content is public because anyone who sees my page can see my posts, comments, and likes. But just because something is "public," doesn't always mean the person who posted it expected that it would be used in research by professionals. A lot of people, including myself, post online in more of a casual way that is meant to be seen by my close friends and family. This can make the line between "public" and "private" a little blurry. Depending on how I am using the content also depends on the level of consent in my opinion. If I was only focusing on the patterns of hashtags, likes, and comments, then I wouldn't feel like I would need consent from the users. However, if I planned on doing more "personal" research where I would be quoting usernames then I feel like I would need to get consent from the user. The "ethical challenge" is finding the right balance between what is accessible vs. what the user intended the post to be used for and if it is right to share that. The way I see it is "Just because I CAN post, doesn't mean I always SHOULD post." I think to keep this better organized, I could make the data anyonymous and try to keep in mind if I plan on using data, could it cause the person harm? This is to make sure I am being respectful to the public aspect of social media and the rights of the people that share their lives on social media. <!-- RESPONSE-END -->
+
+------------------------------------------------------------------------
+
+## Word Count & Range Check
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+get_response_text <- function() {
+  f <- knitr::current_input()
+  if (is.null(f) || !file.exists(f)) return("")
+  x <- readLines(f, warn = FALSE)
+  # Find the lines that EXACTLY match the start/end markers
+  s <- grep("^<!-- RESPONSE-START -->$", x)
+  e <- grep("^<!-- RESPONSE-END -->$", x)
+  if (length(s) != 1 || length(e) != 1 || e <= s) return("")
+  paste(x[(s + 1L):(e - 1L)], collapse = "\n")
+}
+count_words <- function(txt) {
+  # Remove code blocks and inline code before counting
+  txt <- gsub("```[\\s\\S]*?```", " ", txt, perl = TRUE)
+  txt <- gsub("`[^`]*`", " ", txt, perl = TRUE)
+  # Keep letters, numbers, spaces, hyphens, and apostrophes
+  txt <- gsub("[^\\p{L}\\p{N}\\s'-]", " ", txt, perl = TRUE)
+  # Split by whitespace and count non-empty words
+  words <- unlist(strsplit(txt, "\\s+", perl = TRUE))
+  words <- words[nzchar(words)]
+  length(words)
+}
+txt <- get_response_text()
+n <- count_words(txt)
+minw <- as.integer(params$word_min)
+maxw <- as.integer(params$word_max)
+in_range <- n >= minw && n <= maxw
+cat(sprintf("**Word count:** %d  \n", n))
+cat(sprintf("**Required range (%s):** %d–%d words  \n",
+            toupper(params$course), minw, maxw))
+cat(if (in_range) "**Status:** ✅ In range\n" else "**Status:** ❌ Out of range\n")
+```
