@@ -1,0 +1,64 @@
+---
+title: "2025-12-01"
+format:
+  html: default
+  pdf: default
+params:
+  course: "mc451"
+  word_min: 250
+  word_max: 300
+
+  p3: 'The chapter describes descriptive analysis as a “first conversation” with your data. Why is it essential to fully describe your sample before jumping to conclusions or testing hypotheses? How might skipping this step lead to bad research or misleading claims?'
+---
+
+## Choose **one** prompt to answer
+
+> 
+
+> **Prompt C:** `r params$p3`
+
+------------------------------------------------------------------------
+
+## Response
+
+In the Chapter, the course pack describes descriptive analysis as the “first conversation” you have with your data, and honestly, that metaphor makes a lot of sense. When you first collect a dataset, it usually looks messy and kind of confusing. It starts as just a bunch of numbers or responses that don’t really tell you anything yet. Descriptive analysis is what helps you turn all that information into something you can actually understand. It shows you the basics, like what the “typical” response looks like, how spread out the data is, and if anything looks unusual or out of place. If you skip this step and go straight into testing hypotheses, you’re basically guessing without really knowing what you’re working with. For example, the mean might seem like the best way to describe your data, but if the numbers are super skewed, the mean might give a totally wrong idea of what’s normal. In that case, the median would be way more accurate. You might have some outliers that throw off your results, and you wouldn’t even notice them unless you actually look at the distribution through graphs or summaries. Descriptive analysis also helps you check if your data even fits the assumptions needed for later statistical tests. Maybe your groups aren’t balanced, or maybe there are strange values that shouldn’t be there. If those assumptions don’t hold, then any conclusions you make later could be misleading or just wrong. Overall, descriptive analysis isn’t just some boring first step — it’s what makes the rest of your research trustworthy. If you skip it, you risk misunderstanding your data and drawing conclusions that don’t really match what’s actually going on.
+
+------------------------------------------------------------------------
+
+## Word Count & Range Check
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+get_response_text <- function() {
+  f <- knitr::current_input()
+  if (is.null(f) || !file.exists(f)) return("")
+  x <- readLines(f, warn = FALSE)
+  # Find the lines that EXACTLY match the start/end markers
+  s <- grep("^<!-- RESPONSE-START -->$", x)
+  e <- grep("^<!-- RESPONSE-END -->$", x)
+  if (length(s) != 1 || length(e) != 1 || e <= s) return("")
+  paste(x[(s + 1L):(e - 1L)], collapse = "\n")
+}
+count_words <- function(txt) {
+  # Remove code blocks and inline code before counting
+  txt <- gsub("```[\\s\\S]*?```", " ", txt, perl = TRUE)
+  txt <- gsub("`[^`]*`", " ", txt, perl = TRUE)
+  # Keep letters, numbers, spaces, hyphens, and apostrophes
+  txt <- gsub("[^\\p{L}\\p{N}\\s'-]", " ", txt, perl = TRUE)
+  # Split by whitespace and count non-empty words
+  words <- unlist(strsplit(txt, "\\s+", perl = TRUE))
+  words <- words[nzchar(words)]
+  length(words)
+}
+txt <- get_response_text()
+n <- count_words(txt)
+minw <- as.integer(params$word_min)
+maxw <- as.integer(params$word_max)
+in_range <- n >= minw && n <= maxw
+cat(sprintf("**Word count:** %d  \n", n))
+cat(sprintf("**Required range (%s):** %d–%d words  \n",
+            toupper(params$course), minw, maxw))
+cat(if (in_range) "**Status:** ✅ In range\n" else "**Status:** ❌ Out of range\n")
+```
